@@ -1,0 +1,61 @@
+Hello world using Express and Swig
+
+<h1>Hello, {{name}}</h1> 
+
+the curly braces let Swig (our templating engine) know that the variable name should be interpolated
+
+the templating engine that we use is called consolidate. Consolidate is a wrapper for a number of template libraries for Express. Express requires template libraries to have a certain interface and Consolidate handles that. 
+
+Swig requires that 
+
+
+Express | URL Parameters | Get variables
+
+2 ways that express can get data from client side of application
+
+localhost:3000/name?getvar1=value&getvar2=value2
+
+we're actually looking for getvar1 and getvar2
+
+Express Post requests
+
+Error handling in express
+
+In express you can register fucntions specifically to handle errors. 
+You do that by specifying a function
+The function has 4 arguments. 
+
+err
+req
+res
+next
+
+function errorHandler(err, req, res, next) { 
+  console.error(err.message); 
+  console.error(err.stack); 
+  res.status(500); 
+  res.render('error_template', {error: err}); 
+}
+
+Express | next callback
+
+consider our route: 
+
+$ app.post('/favorite_fruit', function(req, res, next){ 
+      var favorite = req.body.fruit; 
+      if(typeof favorite == 'undefined') { 
+        next(Error('Please choose a fruit!')); 
+      }
+      else {
+        res.send("Your favorite fruit is " + favorite); 
+      }
+        
+
+the third argument next, is a function passed in by express (along with req and res)
+one of the things we can use it for is handling errors.
+By passing an Error object to express next(Error('Please choose a fruit')), what express does is try to handle the error.
+The way express trys to handle the error is looking for any error handling middleware that has been registered
+
+here's where we regitered the errorHandler
+
+$ app.use(errorHandler)
